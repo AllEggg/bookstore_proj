@@ -29,6 +29,8 @@ public class BookStoreApplication {
 		AuthorRepository authorRepository = context.getBean(AuthorRepository.class);
 
 		log.info("Автор: {} книги: {}",authorRepository.getAuthorName(2), authorRepository.findAllBooksByAuthor(2));
+
+		log.info("Автор и книги {}", authorRepository.getAuthorAndBooks(1));
 	}
 
 }

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.springframework.data.redis.core.RedisHash;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -28,7 +29,6 @@ public class Customer {
     private Date birthdate;
 
     @OneToMany(mappedBy = "customer")
-    @Fetch(FetchMode.JOIN)
     private List<BookOrder> orders;
 
 }

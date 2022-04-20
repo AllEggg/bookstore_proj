@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.springframework.data.redis.core.RedisHash;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -37,16 +38,13 @@ public class Book {
 
     @ManyToOne
     @JoinColumn
-    @Fetch(FetchMode.JOIN)
     private Warehouse warehouse;
 
-    @OneToOne(mappedBy = "book", fetch = FetchType.LAZY)
-    @Fetch(FetchMode.JOIN)
+    @OneToOne(mappedBy = "book")
     private OrderDetails orderDetails;
 
     @ManyToOne
     @JoinColumn
-    @Fetch(FetchMode.JOIN)
     private Author author;
 
     @Override

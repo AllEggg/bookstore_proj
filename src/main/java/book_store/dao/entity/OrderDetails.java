@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.springframework.data.redis.core.RedisHash;
 
 import javax.persistence.*;
 import java.util.List;
@@ -30,8 +31,7 @@ public class OrderDetails {
     @OneToOne(orphanRemoval = true)
     private BookOrder bookOrder;
 
-    @OneToOne(orphanRemoval = true)
-    @Fetch(FetchMode.JOIN)
+    @OneToOne(orphanRemoval = true, fetch = FetchType.LAZY)
     private Book book;
 
 }

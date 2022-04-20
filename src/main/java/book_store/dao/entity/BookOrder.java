@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.springframework.data.redis.core.RedisHash;
 
 import javax.persistence.*;
 
@@ -24,7 +25,6 @@ public class BookOrder {
 
     @ManyToOne
     @JoinColumn
-    @Fetch(FetchMode.JOIN)
     private Customer customer;
 
 }

@@ -23,5 +23,8 @@ public interface AuthorRepository extends JpaRepository<Author, Integer> {
     @Query(value = "select name, surname, fathers_name from author where author_id = ?1", nativeQuery = true)
     List<String> getAuthorName(Integer id);
 
+    @Query(value = "from Author a join fetch a.bookList where a.authorId = :id")
+    Author getAuthorAndBooks(Integer id);
+
 
 }
