@@ -5,6 +5,7 @@ import book_store.dao.service.BookService;
 import book_store.dao.service.ProductService;
 import book_store.dao.service.WarehouseService;
 import org.hibernate.StaleStateException;
+import org.hibernate.dialect.lock.OptimisticEntityLockException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -26,9 +27,9 @@ public class BookStoreApplication {
 		for (int i = 0; i < 5; i++) {
 			product.setName("Humus");
 
-			new Thread(() -> service.updateProduct(product)).start();
-			log.info("Обновление продукта");
-		}
+			new Thread(() -> { try{ service.updateProduct(product);} catch (ObjectOptimisticLockingFailureException e) {System.out.println("К сожалению, обновление невозможно");}}).start();
+			log.info("Обновление продукта");}
+
 
 	}
 
