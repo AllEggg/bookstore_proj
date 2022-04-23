@@ -16,8 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderDetails {
     @Id
-    @GeneratedValue
-    private int orderId;
+    private int id;
 
     @Column
     private int bookId;
@@ -28,10 +27,10 @@ public class OrderDetails {
     @Column
     private double orderPrice;
 
-    @OneToOne(orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "id")
     private BookOrder bookOrder;
 
-    @OneToOne(orphanRemoval = true, fetch = FetchType.LAZY)
-    private Book book;
 
 }

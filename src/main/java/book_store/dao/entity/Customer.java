@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Customer {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column
     private String name;
@@ -28,7 +28,7 @@ public class Customer {
     @Column
     private Date birthdate;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<BookOrder> orders;
 
 }

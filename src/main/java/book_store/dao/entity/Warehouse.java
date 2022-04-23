@@ -16,15 +16,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Warehouse {
     @Id
-    @GeneratedValue
-    private int warehouse_id;
+    private int id;
 
     @Column
     private int bookQuantity;
 
-    @OneToMany(mappedBy = "warehouse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @Fetch(FetchMode.SUBSELECT)
-    private List<Book> bookIds;
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "id")
+    private Book booksId;
 
 
     }

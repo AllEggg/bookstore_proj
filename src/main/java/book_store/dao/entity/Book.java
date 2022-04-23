@@ -19,8 +19,8 @@ import java.util.Date;
 public class Book {
 
     @Id
-    @GeneratedValue
-    private Integer bookId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     @Column
     private String bookName;
@@ -35,17 +35,9 @@ public class Book {
     private double price;
 
 
-
-    @ManyToOne
-    @JoinColumn
-    private Warehouse warehouse;
-
-    @OneToOne(mappedBy = "book")
-    private OrderDetails orderDetails;
-
-    @ManyToOne
-    @JoinColumn
+    @ManyToOne(fetch = FetchType.LAZY)
     private Author author;
+
 
     @Override
     public String toString() {

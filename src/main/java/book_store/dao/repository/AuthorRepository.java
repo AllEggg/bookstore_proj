@@ -16,15 +16,15 @@ public interface AuthorRepository extends JpaRepository<Author, Integer> {
 
 
  //   @Query(value = "select * from author a  join book b on a.author_id = ?1", nativeQuery = true)
-    @Cacheable(value = "book")
-    @Query(value = "select book_name from book where author_author_id = ?1", nativeQuery = true)
-    List<String> findAllBooksByAuthor(Integer id);
-    @Cacheable(value = "author")
-    @Query(value = "select name, surname, fathers_name from author where author_id = ?1", nativeQuery = true)
-    List<String> getAuthorName(Integer id);
-
-    @Query(value = "from Author a join fetch a.bookList where a.authorId = :id")
-    Author getAuthorAndBooks(Integer id);
+//    @Cacheable(value = "book")
+//    @Query(value = "select book_name from book where author_author_id = ?1", nativeQuery = true)
+//    List<String> findAllBooksByAuthor(Integer id);
+//    @Cacheable(value = "author")
+//    @Query(value = "select name, surname, fathers_name from author where author_id = ?1", nativeQuery = true)
+//    List<String> getAuthorName(Integer id);
+//
+//    @Query(value = "from Author a join fetch a.bookList where a.authorId = :id")
+//    Author getAuthorAndBooks(Integer id);
 
 
 }

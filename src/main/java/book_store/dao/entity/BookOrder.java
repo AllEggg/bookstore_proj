@@ -13,18 +13,13 @@ import javax.persistence.*;
 @Setter
 public class BookOrder {
     @Id
-    @GeneratedValue
-    @Column
-    private int orderId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     @Column
     private double orderPrice;
 
-    @OneToOne
-    private OrderDetails orderDetails;
-
-    @ManyToOne
-    @JoinColumn
+    @ManyToOne(fetch = FetchType.LAZY)
     private Customer customer;
 
 }

@@ -16,10 +16,12 @@ public class BookService {
         this.repository = repository;
     }
 
-    public List<Book> getBooksByAuthorId(Integer id) {
-        return repository.getBooksByAuthor_AuthorId(id);
 
+    public String getNameById(Integer id) {
+        return repository.getBookNameById(id);
     }
+
+
 
 
 
