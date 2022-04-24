@@ -1,6 +1,7 @@
 package book_store;
 
 import book_store.dao.entity.Product;
+import book_store.dao.entity.Warehouse;
 import book_store.dao.service.BookService;
 import book_store.dao.service.ProductService;
 import book_store.dao.service.WarehouseService;
@@ -18,31 +19,41 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 @EnableCaching
 public class BookStoreApplication {
 
-	static void massUpdateProduct(ProductService service, Integer id) {
+	static void massUpdateProduct(ProductService service, Integer productId) {
 
-		Product product = service.getProductById(id);
-
-
-
+		Product product = service.getProductById(productId);
 		for (int i = 0; i < 5; i++) {
 			product.setName("Humus");
 
-			new Thread(() -> { try{ service.updateProduct(product);} catch (ObjectOptimisticLockingFailureException e) {System.out.println("К сожалению, обновление невозможно");}}).start();
-			log.info("Обновление продукта");}
-
+			new Thread(() -> {
+				try {
+					service.updateProduct(product);
+				} catch (ObjectOptimisticLockingFailureException e) {
+					System.out.println("К сожалению, обновление невозможно");
+				}
+			}).start();
+			log.info("Обновление продукта");
+		}
 
 	}
 
-	static void massPurchase(WarehouseService warehouseService, BookService bookService, Integer id) throws InterruptedException {
+	static void massPurchase(WarehouseService warehouseService, BookService bookService, Integer bookId) throws InterruptedException {
 
-		for (int i = 0; i < 3; i++) {
-			log.info("Количество книг до покупки {} - {} ", bookService.getNameById(3),warehouseService.getBooksCount(3));
+
+		for (int i = 0; i < 5; i++) {
+			log.info("Количество книг до покупки {} - {} ", bookService.getNameById(bookId), warehouseService.getBooksCount(bookId));
+			Warehouse warehouse = warehouseService.getWarehouseById(bookId);
+			warehouseService.purchaseBook(bookId, warehouse);
+
 			Thread thread = new Thread(() -> {
-				warehouseService.purchaseBook(3);
+				try {
+					warehouseService.save(warehouse);
+				} catch (ObjectOptimisticLockingFailureException e) {
+					System.out.println("К сожалению, покупка неуспешна, попробуйте позднее.");
+				}
 			});
 			thread.start();
-			thread.join();
-			log.info("Количество книг после покупки {} - {} ", bookService.getNameById(3),warehouseService.getBooksCount(3));
+			log.info("Количество книг после покупки {} - {} ", bookService.getNameById(3), warehouseService.getBooksCount(3));
 
 		}
 	}
@@ -66,32 +77,12 @@ public class BookStoreApplication {
 		log.info("Количество книг перед покупками {} - {} ", bookService.getNameById(idForTest), warService.getBooksCount(idForTest));
 		massPurchase(warService, bookService, idForTest);
 
-
 		massUpdateProduct(productService, 3);
 
 
 	}
 
 
-
-
-
-
-//		log.info("Книг с названием {} в наличии {}", "Дюна", warService.getBooksByName("Дюна"));
-
-//		AuthorRepository authorRepository = context.getBean(AuthorRepository.class);
-//
-//
-//		log.info("Автор: {} книги: {}",authorRepository.getAuthorName(2), authorRepository.findAllBooksByAuthor(2));
-//
-//		log.info("Автор и книги {}", authorRepository.getAuthorAndBooks(1));
-//		log.info("Количество книг{} - {} ", bookService.getNameById(3),warService.getBooksCount(3));
-//
-//		warService.purchaseBook(3);
-//
-//		log.info("Количество книг {} - {} ", bookService.getNameById(3),warService.getBooksCount(3));
-
-
-	}
+}
 
 

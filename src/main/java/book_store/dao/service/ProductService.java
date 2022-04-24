@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.LockModeType;
-import javax.persistence.criteria.CriteriaBuilder;
 
 @Service
 public class ProductService {

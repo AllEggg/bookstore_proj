@@ -9,6 +9,8 @@ import org.hibernate.annotations.FetchMode;
 import org.springframework.data.redis.core.RedisHash;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -38,6 +40,8 @@ public class Book {
     @ManyToOne(fetch = FetchType.LAZY)
     private Author author;
 
+    @OneToOne(mappedBy = "bookId", optional = false)
+    private Warehouse warehouse;
 
     @Override
     public String toString() {
@@ -48,5 +52,8 @@ public class Book {
                 ", price=" + price +
                 '}';
     }
+
+
+
 }
 
