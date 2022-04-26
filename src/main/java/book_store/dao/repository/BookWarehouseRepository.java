@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 
@@ -15,7 +16,7 @@ import javax.persistence.LockModeType;
 import javax.persistence.NamedNativeQuery;
 import javax.transaction.Transactional;
 
-
+@Repository
 public interface BookWarehouseRepository extends JpaRepository<Warehouse, Integer> {
 
     @Query(value = "select book_quantity from warehouse where book_id_id = :id", nativeQuery = true)

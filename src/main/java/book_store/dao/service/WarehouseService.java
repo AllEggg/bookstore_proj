@@ -2,8 +2,12 @@ package book_store.dao.service;
 
 import book_store.dao.entity.Warehouse;
 import book_store.dao.repository.BookWarehouseRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.LockModeType;
+import java.util.List;
 
 @Service
 public class WarehouseService {
@@ -21,6 +25,7 @@ public class WarehouseService {
 
 
     @Transactional
+    @Lock(value = LockModeType.READ)
     public void purchaseBook(Integer id, Warehouse warehouse) {
         int count = getBooksCount(id) - 1;
         if (count >= 0) {
@@ -31,6 +36,7 @@ public class WarehouseService {
 
 
     }
+
 
     public Warehouse getWarehouseById(Integer id) {
         return repository.getWarehouseById(id);

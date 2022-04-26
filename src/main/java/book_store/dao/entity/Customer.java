@@ -22,10 +22,6 @@ public class Customer {
     @Column
     private String name;
     @Column
-    private String surName;
-    @Column
-    private String fathersName;
-    @Column
     private Date birthdate;
 
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

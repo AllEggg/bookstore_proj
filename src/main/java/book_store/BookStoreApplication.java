@@ -74,10 +74,26 @@ public class BookStoreApplication {
 
 		int idForTest = 3;
 
-		log.info("Количество книг перед покупками {} - {} ", bookService.getNameById(idForTest), warService.getBooksCount(idForTest));
-		massPurchase(warService, bookService, idForTest);
 
-		massUpdateProduct(productService, 3);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//		log.info("Количество книг перед покупками {} - {} ", bookService.getNameById(idForTest), warService.getBooksCount(idForTest));
+//		massPurchase(warService, bookService, idForTest);
+//
+//		massUpdateProduct(productService, 3);
 
 
 	}

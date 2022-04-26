@@ -19,10 +19,6 @@ public class Author {
     private Integer id;
     @Column
     private String name;
-    @Column
-    private String surname;
-    @Column
-    private String fathersName;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Book> bookList;
