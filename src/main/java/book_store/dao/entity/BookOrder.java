@@ -22,4 +22,8 @@ public class BookOrder {
     @ManyToOne(fetch = FetchType.LAZY)
     private Customer customer;
 
+    @OneToOne
+    @JoinColumn
+    private OrderDetails details;
+
 }

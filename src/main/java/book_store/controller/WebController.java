@@ -1,7 +1,6 @@
-package book_store.dao.controller;
+package book_store.controller;
 
 import book_store.dao.entity.Book;
-import book_store.dao.entity.Warehouse;
 import book_store.dao.service.BookService;
 import book_store.dao.service.WarehouseService;
 import lombok.extern.slf4j.Slf4j;
@@ -16,11 +15,9 @@ import java.util.List;
 public class WebController {
 
     private final BookService bookService;
-    private final WarehouseService warehouseService;
 
-    public WebController(BookService bookService, WarehouseService warehouseService) {
+    public WebController(BookService bookService) {
         this.bookService = bookService;
-        this.warehouseService = warehouseService;
     }
 
     // http://localhost:8080/bookstore/home

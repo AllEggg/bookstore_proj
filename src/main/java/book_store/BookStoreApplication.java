@@ -1,9 +1,8 @@
 package book_store;
 
-import book_store.dao.entity.Product;
 import book_store.dao.entity.Warehouse;
 import book_store.dao.service.BookService;
-import book_store.dao.service.ProductService;
+
 import book_store.dao.service.WarehouseService;
 import org.hibernate.StaleStateException;
 import org.hibernate.dialect.lock.OptimisticEntityLockException;
@@ -18,24 +17,6 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 @SpringBootApplication
 @EnableCaching
 public class BookStoreApplication {
-
-	static void massUpdateProduct(ProductService service, Integer productId) {
-
-		Product product = service.getProductById(productId);
-		for (int i = 0; i < 5; i++) {
-			product.setName("Humus");
-
-			new Thread(() -> {
-				try {
-					service.updateProduct(product);
-				} catch (ObjectOptimisticLockingFailureException e) {
-					System.out.println("К сожалению, обновление невозможно");
-				}
-			}).start();
-			log.info("Обновление продукта");
-		}
-
-	}
 
 	static void massPurchase(WarehouseService warehouseService, BookService bookService, Integer bookId) throws InterruptedException {
 
@@ -70,7 +51,6 @@ public class BookStoreApplication {
 
 		BookService bookService = context.getBean(BookService.class);
 
-		ProductService productService = context.getBean(ProductService.class);
 
 		int idForTest = 3;
 

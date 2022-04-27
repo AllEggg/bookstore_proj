@@ -12,6 +12,7 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Builder
@@ -40,6 +41,9 @@ public class Book implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Author author;
+
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<Warehouse> warehouse;
 
     @Override
     public String toString() {

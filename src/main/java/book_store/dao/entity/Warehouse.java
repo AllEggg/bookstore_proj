@@ -30,11 +30,10 @@ public class Warehouse {
     @NotBlank
     private Long version;
 
-    @OneToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne
     @MapsId
-    @JoinColumn
-    private Book bookId;
+    @JoinColumn(name = "book_id")
+    private Book book;
 
-
-    }
+}
 

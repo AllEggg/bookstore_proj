@@ -29,7 +29,7 @@ public class OrderDetails {
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
-    @JoinColumn(name = "id")
+    @JoinColumn
     private BookOrder bookOrder;
 
 

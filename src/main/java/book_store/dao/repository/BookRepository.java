@@ -21,10 +21,7 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
 
     Book getBookById(Integer id);
 
-
-
-
-    @Query(value = "select count(*) from book",nativeQuery = true)
-    Integer countBooks();
+    @Query(value = "update book set author_id = :newId where author_id = :oldId;", nativeQuery = true)
+    void changeAuthor(Integer oldId, Integer newId);
 
 }
