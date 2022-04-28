@@ -7,6 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,6 +31,18 @@ public class AuthorView {
         author.setId(authorView.getId());
         author.setName(authorView.getName());
         return author;
+    }
+
+    public List<AuthorView> mapToViewList(List<Author> authorList) {
+        List<AuthorView> viewList = new ArrayList<>();
+        for (Author author:authorList) {
+            AuthorView authorView = new AuthorView();
+            authorView.setId(author.getId());
+            authorView.setName(author.getName());
+            viewList.add(authorView);
+        }
+
+        return viewList;
     }
 
 

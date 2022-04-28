@@ -2,7 +2,10 @@ package book_store.controller;
 
 
 import book_store.dao.entity.Book;
+import book_store.dao.filters.BookFilter;
+import book_store.dao.service.AuthorService;
 import book_store.dao.service.BookService;
+import book_store.dao.service.WarehouseService;
 import book_store.views.BookView;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,51 +13,67 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("restcontrol/bookstore")
+@RequestMapping("restcontrol/books")
 public class BookRestController {
 
     private final BookService bookService;
+    private final WarehouseService warehouseService;
     private final BookView view;
+    private final AuthorService authorService;
 
-    public BookRestController(BookService bookService, BookView view) {
+    public BookRestController(BookService bookService, WarehouseService warehouseService, BookView view, AuthorService authorService) {
         this.bookService = bookService;
+        this.warehouseService = warehouseService;
         this.view = view;
+        this.authorService = authorService;
     }
-
+    // get books
     @GetMapping
-    public List<BookView> getBooks(@RequestParam(value = "name", required = false) String name) {
-        return view.mapToViewList(bookService.getAllBooks());
+    public List<BookView> getBooks(
+            @RequestParam(value = "name", required = false) String name
+    ) {
+        if(name != null) {
+            return bookService.getBookSpec(new BookFilter(name))
+                    .stream()
+                    .map((Book book) -> view.mapToView(bookService.getBookByName(name), warehouseService))
+                    .collect(Collectors.toList());
+        } else {
+            return view.mapToViewList(bookService.getAllBooks(), warehouseService);
+        }
+    }
+    // get book
+    @GetMapping("/{name}")
+    public BookView getBook(@PathVariable("name") String name) {
+        return view.mapToView(bookService.getBookByName(name), warehouseService);
     }
 
-    @GetMapping("/{bookId}")
-    public BookView getBook(@PathVariable("bookId") Integer id) {
-        return view.mapToView(bookService.getBookById(id));
-    }
     // add book
     @PostMapping
     public BookView addBook(@RequestBody BookView body) {
-        if (body.getId() != null) {
+        Book book = view.mapFromView(body, authorService);
+        if (bookService.bookIfExist(body.getName())) {
             throw new EntityExistsException(
-                    String.format("Книга с id = %$ уже существует", body.getId())
+                    String.format("Книга с названием = %$ уже существует", body.getName())
             );
         }
-        Book book = view.mapFromView(body);
+
         Book newBook = bookService.addBook(book);
-        return view.mapToView(newBook);
+        return view.mapToView(newBook, warehouseService);
     }
 
-    @PutMapping("/{bookId}")
-    public BookView editBook(@PathVariable("bookId") Integer id, @RequestBody BookView body) {
+    @PutMapping("/{bookName}")
+    public BookView editBook(@PathVariable("bookName") String name, @RequestBody BookView body) {
 
-        if (body.getId() == null) {
+        if (bookService.bookIfExist(body.getName())) {
             throw new EntityNotFoundException("Такой книги нет");
-        } else if (!Objects.equals(id, body.getId())) {
-            throw new RuntimeException("Идентификаторы не совпадают");
+        } else if (!Objects.equals(name, body.getName())) {
+            throw new RuntimeException("Ошибка названия");
         }
 
-        Book book = bookService.getBookById(id);
+        Book book = bookService.getBookByName(name);
 
         if (!book.getName().equals(body.getName())) {
             book.setName(body.getName());
@@ -72,13 +91,13 @@ public class BookRestController {
             bookService.changeAuthor(book.getAuthor(), body.getAuthorName());
         }
         Book edited = bookService.addBook(book);
-        return view.mapToView(edited);
+        return view.mapToView(edited, warehouseService);
 
     }
 
-    @DeleteMapping("{bookId}")
-    public Boolean deleteBook(@PathVariable("bookId") Integer id) {
-        return bookService.deleteBook(id);
+    @DeleteMapping("/{bookName}")
+    public Boolean deleteBook(@PathVariable("bookName") String name) {
+        return bookService.deleteBook(name);
     }
 
 }

@@ -1,6 +1,8 @@
 package book_store;
 
+import book_store.dao.entity.Author;
 import book_store.dao.entity.Warehouse;
+import book_store.dao.service.AuthorService;
 import book_store.dao.service.BookService;
 
 import book_store.dao.service.WarehouseService;
@@ -18,26 +20,6 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 @EnableCaching
 public class BookStoreApplication {
 
-	static void massPurchase(WarehouseService warehouseService, BookService bookService, Integer bookId) throws InterruptedException {
-
-
-		for (int i = 0; i < 5; i++) {
-			log.info("Количество книг до покупки {} - {} ", bookService.getNameById(bookId), warehouseService.getBooksCount(bookId));
-			Warehouse warehouse = warehouseService.getWarehouseById(bookId);
-			warehouseService.purchaseBook(bookId, warehouse);
-
-			Thread thread = new Thread(() -> {
-				try {
-					warehouseService.save(warehouse);
-				} catch (ObjectOptimisticLockingFailureException e) {
-					System.out.println("К сожалению, покупка неуспешна, попробуйте позднее.");
-				}
-			});
-			thread.start();
-			log.info("Количество книг после покупки {} - {} ", bookService.getNameById(3), warehouseService.getBooksCount(3));
-
-		}
-	}
 
 	private static final Logger log = LoggerFactory.getLogger(BookStoreApplication.class);
 
@@ -50,6 +32,13 @@ public class BookStoreApplication {
 		WarehouseService warService = context.getBean(WarehouseService.class);
 
 		BookService bookService = context.getBean(BookService.class);
+
+		AuthorService authorService = context.getBean(AuthorService.class);
+
+//		Author author = new Author();
+//		author.setName("AAAAAAA");
+//
+//		authorService.createAuthor(author);
 
 
 		int idForTest = 3;

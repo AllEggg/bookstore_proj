@@ -4,10 +4,15 @@ import book_store.dao.entity.Author;
 import book_store.dao.entity.Book;
 import book_store.dao.repository.AuthorRepository;
 import book_store.dao.repository.BookRepository;
+import book_store.dao.filters.BookFilter;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+
+import static book_store.dao.specifications.BookSpecification.byFilter;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 @Service
 public class BookService {
@@ -32,7 +37,13 @@ public class BookService {
 
         return  repository.findAll();
     }
+    public Book getBookByName(String name) {
+        return repository.getBookByName(name);
+    }
 
+    public Integer getBookIdByName(String name) {
+        return repository.getIdByName(name);
+    }
     public Book getBookById(Integer id) {
         return repository.getBookById(id);
     }
@@ -41,9 +52,14 @@ public class BookService {
         return repository.save(book);
     }
 
-    public Boolean deleteBook(Integer id) {
-        repository.delete(repository.getBookById(id));
+    public Boolean deleteBook(String name) {
+        repository.delete(repository.getBookByName(name));
         return true;
+    }
+
+    public List<Book> getBookSpec(BookFilter spec) {
+        Specification<Book> specification = where(byFilter(spec));
+        return repository.findAll(specification);
     }
 
     @Transactional
@@ -51,7 +67,10 @@ public class BookService {
         repository.changeAuthor(oldAuthor.getId(), authorRepository.getAuthorByName(newAuthor).getId());
     }
 
+    public Boolean bookIfExist(String name) {
+        return repository.existsBookByName(name);
 
+    }
 
 }
 
