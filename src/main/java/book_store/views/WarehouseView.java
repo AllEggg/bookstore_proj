@@ -2,6 +2,7 @@ package book_store.views;
 
 
 import book_store.dao.entity.Warehouse;
+import book_store.dao.service.BookService;
 import book_store.dao.service.WarehouseService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,14 +18,17 @@ import java.util.List;
 @NoArgsConstructor
 public class WarehouseView {
 
-    private Integer id;
+    private Long id;
     private Integer bookQuantity;
     private String bookName;
 
-    public WarehouseView mapToView(String bookName, WarehouseService warehouseService) {
+    public WarehouseView mapToView(String bookName,
+                                   WarehouseService warehouseService,
+                                   BookService bookService) {
         WarehouseView warehouseView = new WarehouseView();
         warehouseView.setId(warehouseService.getBookIdByName(bookName));
         warehouseView.setBookQuantity(warehouseService.getBooksCount(warehouseView.getId()));
+        warehouseView.setBookName(bookService.getNameById(warehouseView.getId()));
         return warehouseView;
     }
 

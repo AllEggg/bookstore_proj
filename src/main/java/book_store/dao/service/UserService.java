@@ -49,9 +49,11 @@ public class UserService implements UserDetailsService {
                 .collect(Collectors.toSet());
 
         Set<Role> existRoles = roleRepository.findByRoleIn(roles);
+
         bookStoreUser.setRoles(existRoles);
         existRoles.forEach(role -> role.setBookStoreUsers(Set.of(bookStoreUser)));
         userRepository.save(bookStoreUser);
+
     }
 
     public void addRole(BookStoreUser bookStoreUser, Role role) {

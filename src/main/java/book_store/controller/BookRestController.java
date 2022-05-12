@@ -30,7 +30,7 @@ public class BookRestController {
         this.view = view;
         this.authorService = authorService;
     }
-    // get books
+
     @GetMapping
     public List<BookView> getBooks(
             @RequestParam(value = "name", required = false) String name
@@ -44,13 +44,13 @@ public class BookRestController {
             return view.mapToViewList(bookService.getAllBooks(), warehouseService);
         }
     }
-    // get book
+
     @GetMapping("/{name}")
     public BookView getBook(@PathVariable("name") String name) {
         return view.mapToView(bookService.getBookByName(name), warehouseService);
     }
 
-    // add book
+
     @PostMapping
     public BookView addBook(@RequestBody BookView body) {
         Book book = view.mapFromView(body, authorService);
@@ -67,7 +67,7 @@ public class BookRestController {
     @PutMapping("/{bookName}")
     public BookView editBook(@PathVariable("bookName") String name, @RequestBody BookView body) {
 
-        if (bookService.bookIfExist(body.getName())) {
+        if (!bookService.bookIfExist(name)) {
             throw new EntityNotFoundException("Такой книги нет");
         } else if (!Objects.equals(name, body.getName())) {
             throw new RuntimeException("Ошибка названия");

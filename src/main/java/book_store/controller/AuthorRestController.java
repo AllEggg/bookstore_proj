@@ -3,6 +3,7 @@ package book_store.controller;
 import book_store.dao.entity.Author;
 import book_store.dao.service.AuthorService;
 import book_store.views.AuthorView;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityExistsException;
@@ -22,7 +23,6 @@ public class AuthorRestController {
         this.authorView = authorView;
     }
 
-    // get all authors
     @GetMapping
     public List<AuthorView> getAllAuthors() {
 
@@ -30,13 +30,13 @@ public class AuthorRestController {
 
     }
 
-    // get author by name
+
     @GetMapping("/{authorName}")
     public AuthorView getAuthorByName(@PathVariable("authorName") String authorName) {
         return authorView.mapToView(authorService.getAuthorByName(authorName));
     }
 
-    // add new author
+
     @PostMapping
     public AuthorView addAuthor(@RequestBody AuthorView body) {
         if (authorService.authorIfExist(body.getName())) {
@@ -50,14 +50,12 @@ public class AuthorRestController {
 
     }
 
-    // edit author
+
     @PutMapping("/{authorName}")
     public AuthorView editAuthor(@PathVariable("authorName") String name,
                                  @RequestBody AuthorView body) {
-        if (authorService.authorIfExist(body.getName())) {
+        if (!authorService.authorIfExist(name)) {
             throw new EntityNotFoundException("Такого автора нет");
-        } else if (!Objects.equals(name, body.getName())) {
-            throw new RuntimeException("Ошибка названия");
         }
 
         Author author = authorService.getAuthorByName(name);
@@ -70,7 +68,7 @@ public class AuthorRestController {
         return authorView.mapToView(editedAuthor);
     }
 
-    // delete author
+
     @DeleteMapping("/{authorName}")
     public Boolean deleteAuthor(@PathVariable("authorName") String name) {
         return authorService.deleteAuthor(name);

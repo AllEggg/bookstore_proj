@@ -8,18 +8,18 @@ import org.springframework.stereotype.Repository;
 import javax.transaction.Transactional;
 import java.util.List;
 @Repository
-public interface BookWarehouseRepository extends JpaRepository<Warehouse, Integer> {
+public interface BookWarehouseRepository extends JpaRepository<Warehouse, Long> {
 
     @Query(value = "select book_quantity from warehouse where book_id = :id", nativeQuery = true)
-    Integer getBooksQuantityById(Integer id);
+    Integer getBooksQuantityById(Long id);
 
     @Transactional
     @Modifying
     @Query(value = "update warehouse set book_quantity = :count where book_id = :id", nativeQuery = true)
-    void changeBookQuantity(Integer count, int id);
+    void changeBookQuantity(Long id, Integer count);
 
     @Query(value = "select * from warehouse where book_id = :id",nativeQuery = true)
-    Warehouse getWarehouseById(Integer id);
+    Warehouse getWarehouseById(Long id);
 
     List<Warehouse> findAll();
 

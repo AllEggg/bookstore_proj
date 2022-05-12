@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface AuthorRepository extends JpaRepository<Author, Integer> {
+public interface AuthorRepository extends JpaRepository<Author, Long> {
 //    @Query(value = "select * from author where name = :name", nativeQuery = true)
     Author getAuthorByName(String name);
 

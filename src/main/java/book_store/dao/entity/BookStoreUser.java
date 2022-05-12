@@ -5,9 +5,7 @@ import lombok.Setter;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Getter
@@ -25,12 +23,15 @@ public class BookStoreUser implements UserDetails {
     @Column
     private String password;
 
-    @ManyToMany(mappedBy = "bookStoreUsers", fetch = FetchType.EAGER)
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "book_store_users_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new LinkedHashSet<>();
 
     @Override
     public Collection<Role> getAuthorities() {
-        return roles;
+        return null;
     }
 
     @Override
@@ -66,4 +67,6 @@ public class BookStoreUser implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
 }

@@ -22,14 +22,14 @@ public class WarehouseService {
         this.bookService = bookService;
     }
 
-    public int getBooksCount(Integer id) {
+    public int getBooksCount(Long id) {
         return repository.getBooksQuantityById(id);
     }
 
     @Transactional
     @Lock(value = LockModeType.READ)
     public void refillBook(String name, Integer refillQuantity) {
-        int bookId = bookService.getBookIdByName(name);
+        Long bookId = bookService.getBookIdByName(name);
         Integer quantity = repository.getBooksQuantityById(bookId)
                 + refillQuantity;
         repository.changeBookQuantity(bookId, quantity);
@@ -38,7 +38,7 @@ public class WarehouseService {
     @Transactional
     @Lock(LockModeType.READ)
     public void sellBook(String name, Integer sellQuantity) {
-        int bookId = bookService.getBookIdByName(name);
+        Long bookId = bookService.getBookIdByName(name);
         if ((repository.getBooksQuantityById(bookId) - sellQuantity) < 0) {
             throw new OutOfStockExeption();
         } else {
@@ -49,7 +49,7 @@ public class WarehouseService {
     public List<Warehouse> getWarehouse() {
         return repository.findAll();
     }
-    public Integer getBookIdByName(String name) {
+    public Long getBookIdByName(String name) {
         return bookService.getBookIdByName(name);
     }
 
@@ -57,7 +57,7 @@ public class WarehouseService {
         repository.save(warehouse);
     }
 
-    public String getBookNameByIdWarehouse(Integer id) {
+    public String getBookNameByIdWarehouse(Long id) {
         return bookService.getNameById(id);
     }
 

@@ -27,11 +27,9 @@ public class BookService {
         this.authorRepository = authorRepository;
     }
 
-
-    public String getNameById(Integer id) {
+    public String getNameById(Long id) {
         return repository.getBookNameById(id);
     }
-
 
     public List<Book> getAllBooks() {
 
@@ -41,12 +39,14 @@ public class BookService {
         return repository.getBookByName(name);
     }
 
-    public Integer getBookIdByName(String name) {
+    public Long getBookIdByName(String name) {
         return repository.getIdByName(name);
     }
-    public Book getBookById(Integer id) {
+
+    public Book getBookById(Long id) {
         return repository.getBookById(id);
     }
+
     @Transactional
     public Book addBook(Book book) {
         return repository.save(book);
@@ -70,6 +70,10 @@ public class BookService {
     public Boolean bookIfExist(String name) {
         return repository.existsBookByName(name);
 
+    }
+
+    public Double getBookPrice(Long id) {
+        return repository.getPriceById(id);
     }
 
 }

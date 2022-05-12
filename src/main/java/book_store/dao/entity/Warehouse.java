@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Warehouse {
     @Id
-    private int id;
+    private Long id;
 
     @Column
     private int bookQuantity;

@@ -1,5 +1,6 @@
 package book_store.controller;
 
+import book_store.dao.service.BookService;
 import book_store.dao.service.WarehouseService;
 import book_store.views.WarehouseView;
 import org.springframework.web.bind.annotation.*;
@@ -11,10 +12,12 @@ public class WarehouseRestController {
 
     private final WarehouseService warehouseService;
     private final WarehouseView warehouseView;
+    private final BookService bookService;
 
-    public WarehouseRestController(WarehouseService warehouseService, WarehouseView warehouseView) {
+    public WarehouseRestController(WarehouseService warehouseService, WarehouseView warehouseView, BookService bookService) {
         this.warehouseService = warehouseService;
         this.warehouseView = warehouseView;
+        this.bookService = bookService;
     }
 
     @GetMapping
@@ -24,7 +27,7 @@ public class WarehouseRestController {
 
     @GetMapping("/{bookName}")
     public WarehouseView getBookWarehouse(@PathVariable("bookName") String name) {
-        return warehouseView.mapToView(name, warehouseService);
+        return warehouseView.mapToView(name, warehouseService, bookService);
     }
 
 }

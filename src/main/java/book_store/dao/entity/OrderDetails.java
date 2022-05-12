@@ -8,7 +8,9 @@ import org.hibernate.annotations.FetchMode;
 import org.springframework.data.redis.core.RedisHash;
 
 import javax.persistence.*;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -16,21 +18,46 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderDetails {
     @Id
-    private int id;
-
-    @Column
-    private int bookId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column
     private int bookQuantity;
 
     @Column
+    private Long bookId;
+
+    @Column
     private double orderPrice;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
-    @JoinColumn
+    @ManyToOne(fetch = FetchType.LAZY)
     private BookOrder bookOrder;
 
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE} )
+    @JoinTable(name = "order_books",
+            joinColumns = @JoinColumn(name = "order_details_id"),
+            inverseJoinColumns = @JoinColumn(name = "books_id"))
+    private Set<Book> books;
+
+    public void addBook(Book book){
+        this.books.add(book);
+        book.getOrderDetails().add(this);
+    }
+    public void removeBook(Book book){
+        this.books.remove(book);
+        book.getOrderDetails().remove(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof OrderDetails)) return false;
+        return id != null && id.equals(((OrderDetails) o).getId());
+    }
+    @Override
+    public int hashCode() {
+        return 31;
+    }
 
 }

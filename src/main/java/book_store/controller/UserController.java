@@ -5,6 +5,7 @@ import book_store.dao.entity.Role;
 import book_store.dao.service.UserService;
 import book_store.views.RoleView;
 import book_store.views.UserView;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +24,7 @@ public class UserController {
     }
 
     @PostMapping
-    public Boolean createUser(@RequestBody UserView user) {
+    public Boolean createUser(@RequestBody @NotNull UserView user) {
         BookStoreUser entity = new BookStoreUser();
         entity.setUsername(user.getLogin());
         entity.setPassword(user.getPassword());

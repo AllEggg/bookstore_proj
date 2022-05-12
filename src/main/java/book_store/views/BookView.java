@@ -34,7 +34,6 @@ public class BookView {
         bookView.setPageQuantity(book.getPageQuantity());
         bookView.setPublishYear(book.getPublishYear());
         bookView.setAuthorName(book.getAuthor().getName());
-        bookView.setInStock(warehouseService.getBooksCount(book.getId()));
         return bookView;
     }
 

@@ -4,34 +4,34 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.Hibernate;
+import org.hibernate.cfg.UniqueConstraintHolder;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
-import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "roles")
+@Table(name = "role")
 @NoArgsConstructor
 public class Role implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column
     private String role;
+
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
+    private Set<BookStoreUser> bookStoreUsers = new LinkedHashSet<>();
+
 
     public Role(String role) {
         this.role = role;
     }
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_roles")
-    private Set<BookStoreUser> bookStoreUsers = new LinkedHashSet<>();
 
     @Override
     public boolean equals(Object o) {
@@ -50,4 +50,6 @@ public class Role implements GrantedAuthority {
     public String getAuthority() {
         return role;
     }
+
+
 }

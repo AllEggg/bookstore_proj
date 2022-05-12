@@ -13,27 +13,29 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Date;
 import java.util.List;
 @Repository
-public interface BookRepository extends JpaRepository<Book, Integer> {
+public interface BookRepository extends JpaRepository<Book, Long> {
 
 
     List<Book> findAll(Specification<Book> specification);
 
 
     @Query(value = "select id from book where name = :name", nativeQuery = true)
-    Integer getIdByName(String name);
+    Long getIdByName(String name);
 
-    @Cacheable(value = "book_name")
     @Query(value = "select name from book where id = :id", nativeQuery = true)
-    String getBookNameById(Integer id);
+    String getBookNameById(Long id);
 
-    Book getBookById(Integer id);
+    Book getBookById(Long id);
 
     @Query(value = "update book set author_id = :newId where author_id = :oldId;", nativeQuery = true)
-    void changeAuthor(Integer oldId, Integer newId);
+    void changeAuthor(Long oldId, Long newId);
 
     Boolean existsBookByName(String name);
 
     Book getBookByName(String name);
+
+    @Query(value = "select price from book where id = :id", nativeQuery = true)
+    Double getPriceById(Long id);
 
 
 }

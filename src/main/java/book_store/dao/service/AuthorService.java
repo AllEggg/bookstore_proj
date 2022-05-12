@@ -23,7 +23,7 @@ public class AuthorService {
         return repository.findAll();
     }
 
-    public Author getAuthorById(Integer id) {
+    public Author getAuthorById(Long id) {
         return repository.getById(id);
     }
 
