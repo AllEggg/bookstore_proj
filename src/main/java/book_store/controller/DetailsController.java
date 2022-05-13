@@ -42,48 +42,48 @@ public class DetailsController {
     @PostMapping("/{order_id}")
     public DetailsView addBookToOrder(@PathVariable("order_id") Long id
             , @RequestBody DetailsViewForRequest body) {
+
         OrderDetails orderDetails = detailsViewForRequest.mapFromView(body
                 , detailsService, bookService);
+        OrderDetails newDetails;
         BookOrder order = orderService.getOrderById(id);
+        Book book = bookService.getBookByName(body.getBookName());
+
         if (!orderService.ifExist(id)) {
-            throw new EntityExistsException(
-                    String.format("Заказ номер = %& не существует", id)
-            );
-        } else if (detailsService.existBookInOrder(bookService.getBookIdByName(body.getBookName()),
-                order.getId())) {
-            int alreadyHas = detailsService.getBookQuantityByOrderId(order.getId());
-            orderDetails.setOrderPrice(detailsService.getPrice(bookService.getBookIdByName(body.getBookName())
-                    , body.getBookQuantity() + alreadyHas));
+            throw new EntityExistsException("No such order");
+
+        } else if (detailsService.existBookInOrder(book.getId(), order.getId())) {
+            int newQuantity = detailsService.getBookQuantityByOrderId(order.getId(), book.getId()) + body.getBookQuantity();
+            newDetails = detailsService.updateQuantity(detailsService.getDetailsByBookId(book.getId(),
+                    order.getId()),
+                    newQuantity);
 
         } else {
-            orderDetails.setOrderPrice(detailsService.getPrice(bookService.getBookIdByName(body.getBookName())
-                    , body.getBookQuantity()));
+            orderDetails.setOrderPrice(detailsService.getPrice(book.getId(), body.getBookQuantity()));
+            orderDetails.setBookOrder(order);
+            newDetails = detailsService.add(orderDetails);
+
         }
 
-        orderDetails.setBookOrder(order);
-        OrderDetails newDetails = detailsService.add(orderDetails);
         return detailsView.mapToView(newDetails, bookService);
         }
 
-    @PutMapping("/order_id")
-    public DetailsView editDetails(@PathVariable("order_id") Long id
+    @PutMapping("/{order_id}")
+    public DetailsView editDetails(@PathVariable("order_id") Long orderId
             , @RequestBody DetailsViewForRequest body) {
-        if (!orderService.ifExist(id)) {
-            throw new EntityExistsException(
-                    String.format("Заказ номер = %& не существует", id)
-            );}
-        else if (!detailsService.existBookInOrder(bookService.getBookIdByName(body.getBookName()),
-                id)) {
-            throw new EntityExistsException(
-                    String.format("Книги =%& нет в заказе = %&"
-                            , "fff", id));}
 
-        OrderDetails orderDetails = detailsService.getDetailsByOrderId(id);
+        Book book = bookService.getBookByName(body.getBookName());
+
+        if (!orderService.ifExist(orderId)) {
+            throw new EntityExistsException(String.format("Заказ номер = %d не существует", orderId));}
+        else if (!detailsService.existBookInOrder(book.getId(), orderId)) {
+            throw new EntityExistsException("Entittytytyt: ");}
+
+        OrderDetails orderDetails = detailsService.getDetailsByBookId(book.getId(), orderId);
 
         if (orderDetails.getBookQuantity() != body.getBookQuantity()) {
             orderDetails.setBookQuantity(body.getBookQuantity());
-            orderDetails.setOrderPrice(detailsService.getPrice(bookService.getBookIdByName(body.getBookName())
-                    , body.getBookQuantity()));
+            orderDetails.setOrderPrice(detailsService.getPrice(book.getId(), body.getBookQuantity()));
         }
 
         OrderDetails edited = detailsService.add(orderDetails);
@@ -91,7 +91,7 @@ public class DetailsController {
 
     }
 
-    @DeleteMapping("/container_id")
+    @DeleteMapping("/{container_id}")
     public Boolean deleteDetails(@PathVariable("container_id") Long id) {
         return detailsService.delete(id);
     }
