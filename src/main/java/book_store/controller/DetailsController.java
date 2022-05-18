@@ -9,6 +9,7 @@ import book_store.dao.service.DetailsService;
 import book_store.dao.service.OrderService;
 import book_store.views.DetailsView;
 import book_store.views.DetailsViewForRequest;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityExistsException;
@@ -38,7 +39,7 @@ public class DetailsController {
         return detailsView.mapToViewList(id, detailsService, bookService);
 
     }
-
+    @Secured({"ROLE_USER"})
     @PostMapping("/{order_id}")
     public DetailsView addBookToOrder(@PathVariable("order_id") Long id
             , @RequestBody DetailsViewForRequest body) {
@@ -53,6 +54,7 @@ public class DetailsController {
             throw new EntityExistsException("No such order");
 
         } else if (detailsService.existBookInOrder(book.getId(), order.getId())) {
+
             int newQuantity = detailsService.getBookQuantityByOrderId(order.getId(), book.getId()) + body.getBookQuantity();
             newDetails = detailsService.updateQuantity(detailsService.getDetailsByBookId(book.getId(),
                     order.getId()),
@@ -67,7 +69,7 @@ public class DetailsController {
 
         return detailsView.mapToView(newDetails, bookService);
         }
-
+    @Secured({"ROLE_USER"})
     @PutMapping("/{order_id}")
     public DetailsView editDetails(@PathVariable("order_id") Long orderId
             , @RequestBody DetailsViewForRequest body) {
@@ -90,7 +92,7 @@ public class DetailsController {
         return detailsView.mapToView(edited, bookService);
 
     }
-
+    @Secured({"ROLE_USER"})
     @DeleteMapping("/{container_id}")
     public Boolean deleteDetails(@PathVariable("container_id") Long id) {
         return detailsService.delete(id);

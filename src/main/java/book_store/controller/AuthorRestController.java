@@ -36,7 +36,7 @@ public class AuthorRestController {
         return authorView.mapToView(authorService.getAuthorByName(authorName));
     }
 
-
+    @Secured({"ROLE_ADMIN"})
     @PostMapping
     public AuthorView addAuthor(@RequestBody AuthorView body) {
         if (authorService.authorIfExist(body.getName())) {
@@ -50,7 +50,7 @@ public class AuthorRestController {
 
     }
 
-
+    @Secured({"ROLE_ADMIN"})
     @PutMapping("/{authorName}")
     public AuthorView editAuthor(@PathVariable("authorName") String name,
                                  @RequestBody AuthorView body) {
@@ -68,7 +68,7 @@ public class AuthorRestController {
         return authorView.mapToView(editedAuthor);
     }
 
-
+    @Secured({"ROLE_ADMIN"})
     @DeleteMapping("/{authorName}")
     public Boolean deleteAuthor(@PathVariable("authorName") String name) {
         return authorService.deleteAuthor(name);

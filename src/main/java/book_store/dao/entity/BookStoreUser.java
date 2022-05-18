@@ -31,7 +31,7 @@ public class BookStoreUser implements UserDetails {
 
     @Override
     public Collection<Role> getAuthorities() {
-        return null;
+        return roles;
     }
 
     @Override

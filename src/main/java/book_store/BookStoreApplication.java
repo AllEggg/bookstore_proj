@@ -36,18 +36,6 @@ public class BookStoreApplication {
 //		BookStoreUser user = new BookStoreUser();
 //		user.setUsername("bookStoreUser1");
 //		user.setPassword("12345");
-//
-//
-//		userService.create(user);
-//		BookOrder order = new BookOrder();
-//		OrderDetails orderDetails = new OrderDetails();
-//
-//
-//		orderService.createOrder(order);
-//		order.setOrderDetails(List.of(orderDetails));
-//
-//		detailsService.create(orderDetails);
-
 
 		System.out.println("Hello");
 	}

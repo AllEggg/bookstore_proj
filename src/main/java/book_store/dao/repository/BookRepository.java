@@ -22,8 +22,8 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Query(value = "select id from book where name = :name", nativeQuery = true)
     Long getIdByName(String name);
 
-    @Query(value = "select name from book where id = :id", nativeQuery = true)
-    String getBookNameById(Long id);
+    @Query(value = "select name from book where id = :bookId", nativeQuery = true)
+    String getBookNameById(Long bookId);
 
     Book getBookById(Long id);
 

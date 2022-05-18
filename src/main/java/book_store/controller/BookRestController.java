@@ -7,6 +7,7 @@ import book_store.dao.service.AuthorService;
 import book_store.dao.service.BookService;
 import book_store.dao.service.WarehouseService;
 import book_store.views.BookView;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityExistsException;
@@ -50,7 +51,7 @@ public class BookRestController {
         return view.mapToView(bookService.getBookByName(name), warehouseService);
     }
 
-
+    @Secured(value = {"ROLE_ADMIN"})
     @PostMapping
     public BookView addBook(@RequestBody BookView body) {
         Book book = view.mapFromView(body, authorService);
@@ -63,7 +64,7 @@ public class BookRestController {
         Book newBook = bookService.addBook(book);
         return view.mapToView(newBook, warehouseService);
     }
-
+    @Secured({"ROLE_ADMIN"})
     @PutMapping("/{bookName}")
     public BookView editBook(@PathVariable("bookName") String name, @RequestBody BookView body) {
 
@@ -94,7 +95,7 @@ public class BookRestController {
         return view.mapToView(edited, warehouseService);
 
     }
-
+    @Secured({"ROLE_ADMIN"})
     @DeleteMapping("/{bookName}")
     public Boolean deleteBook(@PathVariable("bookName") String name) {
         return bookService.deleteBook(name);

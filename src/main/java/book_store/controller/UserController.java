@@ -1,41 +1,30 @@
 package book_store.controller;
 
-import book_store.dao.entity.BookStoreUser;
-import book_store.dao.entity.Role;
+import book_store.dao.repository.RoleRepository;
 import book_store.dao.service.UserService;
-import book_store.views.RoleView;
 import book_store.views.UserView;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
+    private final RoleRepository roleRepository;
+    private final UserView userView;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, RoleRepository roleRepository, UserView userView) {
         this.userService = userService;
+        this.roleRepository = roleRepository;
+        this.userView = userView;
     }
 
     @PostMapping
-    public Boolean createUser(@RequestBody @NotNull UserView user) {
-        BookStoreUser entity = new BookStoreUser();
-        entity.setUsername(user.getLogin());
-        entity.setPassword(user.getPassword());
-        entity.setRoles(
-                user.getRoles()
-                        .stream()
-                        .map(RoleView::getRole)
-                        .map(Role::new)
-                        .collect(Collectors.toSet())
-        );
-        userService.create(entity);
+    public Boolean createUser(@RequestBody UserView view) {
+        userService.create(userView.mapFromView(view, roleRepository));
         return true;
     }
 

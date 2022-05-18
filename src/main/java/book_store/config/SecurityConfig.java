@@ -11,29 +11,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity(debug = true)
-@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors()
-                .and()
+                .disable()
                 .csrf()
                 .disable()
                 .authorizeRequests()
-//                .antMatchers("/registration").not().fullyAuthenticated()
-//                .antMatchers("/restcontrol/books").hasAnyRole("ADMIN", "USER")
-//                .antMatchers("/", "/swagger-ui/restcontrol/books").permitAll()
                 .anyRequest().authenticated()
-//                .anyRequest().denyAll()
                 .and()
                 .formLogin();
-    }
-
-
-    @Bean
-    public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder();
     }
 
 }

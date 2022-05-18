@@ -1,16 +1,12 @@
 package book_store.dao.service;
 
-import book_store.dao.entity.Book;
 import book_store.dao.entity.OrderDetails;
 import book_store.dao.repository.OrderDetailsRepository;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class DetailsService {
@@ -31,19 +27,7 @@ public class DetailsService {
     }
 
     public OrderDetails getDetailsByBookId(Long bookId, Long orderId) {
-        List<OrderDetails> orderDetailsList = repository.getAllByOrderId(orderId);
-        OrderDetails resultDetails = new OrderDetails();
-        for (OrderDetails details:orderDetailsList) {
-            if (details.getBookId().equals(bookId)) {
-                resultDetails = details;
-            }
-        }
-
-        return resultDetails;
-    }
-
-    public OrderDetails getDetailsByDetailsId(Long id) {
-        return repository.getById(id);
+        return repository.getOrderDetailsByBookIdAndBookOrderId(bookId, orderId);
     }
 
     @Transactional
@@ -52,14 +36,7 @@ public class DetailsService {
     }
 
     public Boolean existBookInOrder(Long bookId, Long orderId) {
-        List<OrderDetails> orderDetailsList = repository.getAllByOrderId(orderId);
-        Boolean value = false;
-        for (OrderDetails details:orderDetailsList) {
-            if (details.getBookId().equals(bookId)) {
-                value = true;
-            }
-        }
-        return value;
+        return repository.existsOrderDetailsByBookIdAndAndBookOrderId(bookId, orderId);
     }
 
     public Integer getBookQuantityByOrderId(Long orderId, Long bookId) {
@@ -74,9 +51,8 @@ public class DetailsService {
 
     @Modifying
     @Transactional
-    public OrderDetails updateQuantity(@NotNull OrderDetails orderDetails, Integer quantity) {
-
+    public OrderDetails updateQuantity(OrderDetails orderDetails, Integer quantity) {
         repository.updateDetails(orderDetails.getId(), quantity);
-        return repository.getOptional(orderDetails.getId());
+        return repository.getById(orderDetails.getId());
     }
 }
