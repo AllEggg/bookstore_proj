@@ -32,11 +32,11 @@ public class UserService implements UserDetailsService {
 
     @Override
     public BookStoreUser loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username);
+        return userRepository.getByUsername(username);
     }
 
     public void create(BookStoreUser bookStoreUser) {
-        BookStoreUser exist = userRepository.findByUsername(bookStoreUser.getUsername());
+        BookStoreUser exist = loadUserByUsername(bookStoreUser.getUsername());
         if (exist != null) {
             throw new EntityExistsException("Пользователь с логином "
                     + bookStoreUser.getUsername() + " уже существует");
@@ -56,7 +56,7 @@ public class UserService implements UserDetailsService {
 
     }
 
-    public void addRole(BookStoreUser bookStoreUser, Role role) {
 
-    }
+
+
 }

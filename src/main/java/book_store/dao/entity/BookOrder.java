@@ -19,7 +19,7 @@ public class BookOrder {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Customer customer;
+    private BookStoreUser customer;
 
 
     @OneToMany(mappedBy = "bookOrder", cascade = CascadeType.ALL)

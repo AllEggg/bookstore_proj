@@ -3,39 +3,62 @@ package book_store.controller;
 
 import book_store.dao.entity.Book;
 import book_store.dao.entity.BookOrder;
+import book_store.dao.entity.BookStoreUser;
 import book_store.dao.entity.OrderDetails;
 import book_store.dao.service.BookService;
 import book_store.dao.service.DetailsService;
 import book_store.dao.service.OrderService;
+import book_store.dao.service.UserService;
 import book_store.views.DetailsView;
 import book_store.views.DetailsViewForRequest;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityExistsException;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("restcontrol/orderDetails")
 public class DetailsController {
 
-
+    private final UserService userService;
     private final DetailsView detailsView;
     private final DetailsViewForRequest detailsViewForRequest;
     private final DetailsService detailsService;
     private final OrderService orderService;
     private final BookService bookService;
 
-    public DetailsController(DetailsView detailsView, DetailsViewForRequest detailsViewForRequest, DetailsService detailsService, OrderService orderService, BookService bookService) {
+
+    public DetailsController(UserService userService,
+                             DetailsView detailsView,
+                             DetailsViewForRequest detailsViewForRequest,
+                             DetailsService detailsService,
+                             OrderService orderService,
+                             BookService bookService) {
+        this.userService = userService;
         this.detailsView = detailsView;
         this.detailsViewForRequest = detailsViewForRequest;
         this.detailsService = detailsService;
         this.orderService = orderService;
         this.bookService = bookService;
+
     }
+
+
 
     @GetMapping("/{order_id}")
     public List<DetailsView> getOrderDetails(@PathVariable("order_id") Long id) {
+        BookOrder order = orderService.getOrderById(id);
+        BookStoreUser user =
+                userService.loadUserByUsername(SecurityContextHolder
+                        .getContext()
+                        .getAuthentication()
+                        .getName());
+        if (!user.getId().equals(order.getCustomer().getId())) {
+            throw new RuntimeException("Доступ к заказу запрещён");
+        }
         return detailsView.mapToViewList(id, detailsService, bookService);
 
     }
@@ -70,9 +93,18 @@ public class DetailsController {
         return detailsView.mapToView(newDetails, bookService);
         }
     @Secured({"ROLE_USER"})
-    @PutMapping("/{order_id}")
+    @PutMapping("{order_id}")
     public DetailsView editDetails(@PathVariable("order_id") Long orderId
             , @RequestBody DetailsViewForRequest body) {
+        BookStoreUser user =
+                userService.loadUserByUsername(SecurityContextHolder
+                        .getContext()
+                        .getAuthentication()
+                        .getName());
+        BookOrder order = orderService.getOrderById(orderId);
+        if (!Objects.equals(user.getId(), order.getCustomer().getId())) {
+            throw new RuntimeException("Доступ к заказу запрещён");
+        }
 
         Book book = bookService.getBookByName(body.getBookName());
 
@@ -94,7 +126,17 @@ public class DetailsController {
     }
     @Secured({"ROLE_USER"})
     @DeleteMapping("/{container_id}")
+
     public Boolean deleteDetails(@PathVariable("container_id") Long id) {
+        BookOrder order = orderService.getOrderById(id);
+        BookStoreUser user =
+                userService.loadUserByUsername(SecurityContextHolder
+                        .getContext()
+                        .getAuthentication()
+                        .getName());
+        if (!user.getId().equals(order.getCustomer().getId())) {
+            throw new RuntimeException("Доступ к заказу запрещён");
+        }
         return detailsService.delete(id);
     }
 

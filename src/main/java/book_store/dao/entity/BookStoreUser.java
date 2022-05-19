@@ -1,7 +1,10 @@
 package book_store.dao.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
@@ -11,6 +14,8 @@ import java.util.*;
 @Getter
 @Setter
 @Table(name = "users")
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class BookStoreUser implements UserDetails {
 
     @Id
@@ -23,6 +28,11 @@ public class BookStoreUser implements UserDetails {
     @Column
     private String password;
 
+    @Column
+    private Date birthdate;
+
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<BookOrder> orders;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "book_store_users_id"),
