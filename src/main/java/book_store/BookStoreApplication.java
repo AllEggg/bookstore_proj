@@ -5,15 +5,15 @@ package book_store;
 import book_store.dao.entity.BookOrder;
 import book_store.dao.entity.BookStoreUser;
 import book_store.dao.entity.OrderDetails;
-import book_store.dao.service.DetailsService;
-import book_store.dao.service.OrderService;
-import book_store.dao.service.UserService;
+import book_store.dao.entity.Warehouse;
+import book_store.dao.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 import java.util.List;
 
@@ -28,16 +28,14 @@ public class BookStoreApplication {
 	public static void main(String[] args) throws InterruptedException {
 
 		ConfigurableApplicationContext context = SpringApplication.run(BookStoreApplication.class, args);
-		UserService userService = context.getBean(UserService.class);
-		OrderService orderService = context.getBean(OrderService.class);
-		DetailsService detailsService = context.getBean(DetailsService.class);
-
 
 //		BookStoreUser user = new BookStoreUser();
 //		user.setUsername("bookStoreUser1");
 //		user.setPassword("12345");
 
 		System.out.println("Hello");
+
+
 	}
 
 

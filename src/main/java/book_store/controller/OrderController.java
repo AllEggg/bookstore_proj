@@ -6,6 +6,7 @@ import book_store.dao.entity.BookStoreUser;
 import book_store.dao.entity.Role;
 import book_store.dao.service.OrderService;
 import book_store.dao.service.UserService;
+import book_store.report.MessageSender;
 import book_store.views.OrderRequestBodyView;
 import book_store.views.OrderView;
 import org.springframework.security.access.annotation.Secured;

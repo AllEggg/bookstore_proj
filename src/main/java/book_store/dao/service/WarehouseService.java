@@ -3,6 +3,7 @@ package book_store.dao.service;
 import book_store.dao.entity.Warehouse;
 import book_store.dao.repository.BookWarehouseRepository;
 import book_store.exeptions.OutOfStockExeption;
+import book_store.report.MessageSender;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,11 +16,13 @@ public class WarehouseService {
 
     private final BookWarehouseRepository repository;
     private final BookService bookService;
+    private final MessageSender messageSender;
 
 
-    public WarehouseService(BookWarehouseRepository repository, BookService bookService) {
+    public WarehouseService(BookWarehouseRepository repository, BookService bookService, MessageSender messageSender) {
         this.repository = repository;
         this.bookService = bookService;
+        this.messageSender = messageSender;
     }
 
     public int getBooksCount(Long id) {
@@ -44,6 +47,7 @@ public class WarehouseService {
         } else {
             int quantity = repository.getBooksQuantityById(bookId) - sellQuantity;
             repository.changeBookQuantity(bookId, quantity);
+            messageSender.sellReportMessage(sellQuantity, bookId);
         }
     }
     public List<Warehouse> getWarehouse() {
