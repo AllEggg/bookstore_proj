@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.util.Calendar;
+import java.util.List;
 
 @Service
 public class ReportService {
@@ -22,6 +23,10 @@ public class ReportService {
 
         report.setDate(new Date(Calendar.getInstance().getTime().getTime()));
         repository.save(report);
+    }
+
+    public List<Report> getAllReport() {
+        return repository.findAll();
     }
 
 }
