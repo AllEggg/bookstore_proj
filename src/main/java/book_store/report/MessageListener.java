@@ -17,12 +17,12 @@ public class MessageListener {
     }
 
 
-    @JmsListener(destination = "oleg-mq")
-    public void processReportListener(@Payload MessageBody messageBody) {
-        reportService.commitReport(messageBody.getBookQuantity(), messageBody.getBookId());
-        log.info("Покупка совершена. Книга - {}, количество - {}",
-                messageBody.getBookId(),
-                messageBody.getBookQuantity());
-    }
+//    @JmsListener(destination = "oleg-mq")
+//    public void processReportListener(@Payload MessageBody messageBody) {
+//        reportService.commitReport(messageBody.getBookQuantity(), messageBody.getBookId());
+//        log.info("Покупка совершена. Книга - {}, количество - {}",
+//                messageBody.getBookId(),
+//                messageBody.getBookQuantity());
+//    }
 
 }

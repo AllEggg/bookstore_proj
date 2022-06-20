@@ -4,11 +4,17 @@ package book_store.dao.service;
 import book_store.dao.entity.Book;
 import book_store.dao.entity.BookOrder;
 import book_store.dao.entity.OrderDetails;
+import book_store.dao.filters.OrderFilter;
 import book_store.dao.repository.BookOrderRepository;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+
+import static book_store.dao.specifications.BookSpecification.byFilter;
+import static book_store.dao.specifications.OrderSpecification.orderByFilter;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 @Service
 public class OrderService {
@@ -38,6 +44,11 @@ public class OrderService {
         }
 
         return totalPrice;
+    }
+
+    public List<BookOrder> getOrderSpec(OrderFilter spec) {
+        Specification<BookOrder> specification = where(orderByFilter(spec));
+        return repository.findAll(specification);
     }
 
     public List<BookOrder> getAllOrders() {

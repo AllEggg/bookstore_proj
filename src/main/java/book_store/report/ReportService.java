@@ -20,7 +20,6 @@ public class ReportService {
         Report report = new Report();
         report.setBookQuantity(bookQuantity);
         report.setBookId(bookId);
-
         report.setDate(new Date(Calendar.getInstance().getTime().getTime()));
         repository.save(report);
     }

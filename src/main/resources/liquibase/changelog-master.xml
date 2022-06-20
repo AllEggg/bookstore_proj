@@ -7,6 +7,6 @@
     <!--    <include file="ddl/post.sql" relativeToChangelogFile="true"/>-->
     <!--    <include file="ddl/comment.sql" relativeToChangelogFile="true"/>-->
     <!--    <include file="dml/initData.sql" relativeToChangelogFile="true"/>-->
-    <include file="ddl/acl.sql" relativeToChangelogFile="true"/>
+<!--    <include file="ddl/acl.sql" relativeToChangelogFile="true"/>-->
 
 </databaseChangeLog>

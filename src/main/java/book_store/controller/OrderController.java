@@ -6,7 +6,6 @@ import book_store.dao.entity.BookStoreUser;
 import book_store.dao.entity.Role;
 import book_store.dao.service.OrderService;
 import book_store.dao.service.UserService;
-import book_store.report.MessageSender;
 import book_store.views.OrderRequestBodyView;
 import book_store.views.OrderView;
 import org.springframework.security.access.annotation.Secured;
@@ -14,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 
 @RestController
@@ -34,45 +34,42 @@ public class OrderController {
         this.requestBodyView = requestBodyView;
     }
 
-    @Secured({"ROLE_ADMIN"})
-    @GetMapping("/{order_id}")
-    public OrderView getOrderById(@PathVariable("order_id") Long id) {
-        BookStoreUser user =
-                userService.loadUserByUsername(SecurityContextHolder
-                        .getContext()
-                        .getAuthentication()
-                        .getName());
-        BookOrder order = orderService.getOrderById(id);
-        boolean isAdmin = user.getRoles()
-                .stream().map(Role::getRole)
-                .anyMatch(p -> p.equals("ROLE_ADMIN"));
-        if (isAdmin) {
-            return view.mapToView(orderService.getOrderById(id),
-                    orderService);
-        } else if (!user.getId().equals(order.getCustomer().getId())) {
-            throw new RuntimeException("Доступ к заказу запрещён");
-        } else {
-            return view.mapToView(orderService.getOrderById(id),
-                    orderService);
-        }
-    }
-
     @GetMapping
-    public List<OrderView> getAllOrders() {
-        BookStoreUser user =
-                userService.loadUserByUsername(SecurityContextHolder
-                        .getContext()
-                        .getAuthentication()
-                        .getName());
+    public List<OrderView> getAllOrders(@RequestParam(value = "id", required = false) Long id) {
+
+        if(id != null) {
+            BookStoreUser user =
+                    userService.loadUserByUsername(SecurityContextHolder
+                            .getContext()
+                            .getAuthentication()
+                            .getName());
+            BookOrder order = orderService.getOrderById(id);
+            boolean isAdmin = user.getRoles()
+                    .stream().map(Role::getRole)
+                    .anyMatch(p -> p.equals("ROLE_ADMIN"));
+            if (isAdmin) {
+                return view.mapToViewList(List.of(orderService.getOrderById(id)),
+                        orderService);
+            } else if (!user.getId().equals(order.getCustomer().getId())) {
+                throw new RuntimeException("Доступ к заказу запрещён");
+            } else {
+                return view.mapToViewList(List.of(orderService.getOrderById(id)),
+                        orderService);
+            }
+        } else{
+            BookStoreUser user =
+            userService.loadUserByUsername(SecurityContextHolder
+                    .getContext()
+                    .getAuthentication()
+                    .getName());
         boolean isAdmin = user.getRoles()
                 .stream().map(Role::getRole)
                 .anyMatch(p -> p.equals("ROLE_ADMIN"));
         if (isAdmin) {
             return view.mapToViewList(orderService.getAllOrders(), orderService);
         } else {
-            return view.mapToViewList(orderService.getCustomerOrders(user.getId()), orderService);
-        }
-    }
+            return view.mapToViewList(orderService.getCustomerOrders(user.getId()), orderService);}
+    }}
 
     @Secured({"ROLE_USER"})
     @PostMapping
@@ -116,3 +113,27 @@ public class OrderController {
 
 
 }
+
+
+//    @Secured({"ROLE_ADMIN"})
+//    @GetMapping("/{order_id}")
+//    public OrderView getOrderById(@PathVariable("order_id") Long id) {
+//        BookStoreUser user =
+//                userService.loadUserByUsername(SecurityContextHolder
+//                        .getContext()
+//                        .getAuthentication()
+//                        .getName());
+//        BookOrder order = orderService.getOrderById(id);
+//        boolean isAdmin = user.getRoles()
+//                .stream().map(Role::getRole)
+//                .anyMatch(p -> p.equals("ROLE_ADMIN"));
+//        if (isAdmin) {
+//            return view.mapToView(orderService.getOrderById(id),
+//                    orderService);
+//        } else if (!user.getId().equals(order.getCustomer().getId())) {
+//            throw new RuntimeException("Доступ к заказу запрещён");
+//        } else {
+//            return view.mapToView(orderService.getOrderById(id),
+//                    orderService);
+//        }
+//    }

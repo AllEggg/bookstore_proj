@@ -1,21 +1,12 @@
 package book_store;
 
 
-
-import book_store.dao.entity.BookOrder;
-import book_store.dao.entity.BookStoreUser;
-import book_store.dao.entity.OrderDetails;
-import book_store.dao.entity.Warehouse;
-import book_store.dao.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
-
-import java.util.List;
 
 
 @SpringBootApplication
