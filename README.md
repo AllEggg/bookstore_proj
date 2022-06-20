@@ -23,6 +23,8 @@ every user can see a list of all authors.
  at book_store/report/MessageListener.java .
 
  If you have any suggestions for improvement, I would be grateful.
+ 
+ -----------------------------------------------------------------------------------------------------------------------
 
 Учебный проект книжного магазина.
 
